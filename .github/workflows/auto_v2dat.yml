@@ -29,14 +29,14 @@ jobs:
         go build
         ls -l v2dat
 
-    - name: Download geoip-only-cn-private.dat and verify checksum
+    - name: Download geoip.dat and verify checksum
       run: |
         set -e
-        echo "Downloading geoip-only-cn-private.dat..."
-        curl --connect-timeout 5 -m 60 --ipv4 -kfSLo "geoip-only-cn-private.dat" "https://github.com/Loyalsoldier/geoip/releases/latest/download/geoip-only-cn-private.dat"
+        echo "Downloading geoip.dat..."
+        curl --connect-timeout 5 -m 60 --ipv4 -kfSLo "geoip.dat" "https://github.com/Loyalsoldier/geoip/releases/latest/download/geoip.dat"
         
-        echo "Downloading geoip-only-cn-private.dat.sha256sum..."
-        curl --connect-timeout 5 -m 10 --ipv4 -kfSLo "geoip-only-cn-private.dat.sha256sum" "https://github.com/Loyalsoldier/geoip/releases/latest/download/geoip-only-cn-private.dat.sha256sum"
+        echo "Downloading geoip.dat.sha256sum..."
+        curl --connect-timeout 5 -m 10 --ipv4 -kfSLo "geoip.dat.sha256sum" "https://github.com/Loyalsoldier/geoip/releases/latest/download/geoip.dat.sha256sum"
         
         echo "Verifying checksum..."
         sha256sum --check "geoip-only-cn-private.dat.sha256sum"
