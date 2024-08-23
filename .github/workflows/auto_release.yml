@@ -1,0 +1,68 @@
+name: auto_release
+
+on:
+  schedule:
+    - cron: '0 1 * * *'
+  workflow_dispatch:
+
+jobs:
+  release-and-tag:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Download and rename latest release asset
+        id: download_latest_asset
+        run: |
+          if gh release download --pattern "mosdns-rule.tar.gz" --dir .; then
+            mv mosdns-rule.tar.gz mosdns-rule-before.tar.gz
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Calculate sha256 of latest tarball
+        id: sha_latest_tarball
+        run: |
+          if [ -f mosdns-rule-before.tar.gz ]; then
+            echo "LATEST_TARBALL_HASH=$(sha256sum mosdns-rule-before.tar.gz | awk '{print $1}')" >> $GITHUB_ENV
+          else
+            echo "LATEST_TARBALL_HASH=" >> $GITHUB_ENV
+          fi
+
+      - name: Archive etc directory
+        run: git archive -o "mosdns-rule.tar.gz" HEAD etc/mosdns/rule
+
+      - name: Calculate sha256 of new tarball
+        id: sha_new_tarball
+        run: |
+          NEW_TARBALL_HASH=$(sha256sum mosdns-rule.tar.gz | awk '{print $1}')
+          echo "NEW_TARBALL_HASH=$NEW_TARBALL_HASH" >> $GITHUB_ENV
+          echo "$NEW_TARBALL_HASH  mosdns-rule.tar.gz" > "mosdns-rule.tar.gz.sha256sum"
+
+      - name: Check if tarballs are different
+        run: |
+          if [ "$LATEST_TARBALL_HASH" != "$NEW_TARBALL_HASH" ]; then
+            echo "CHANGES_FOUND=true" >> $GITHUB_ENV
+          else
+            echo "CHANGES_FOUND=false" >> $GITHUB_ENV
+          fi
+
+      - name: Get the date
+        run: echo "DATE=$(date +'%Y%m%d')" >> $GITHUB_ENV
+
+      - name: Create Release and Upload Asset
+        if: env.CHANGES_FOUND == 'true'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ env.DATE }}
+          name: v${{ env.DATE }}
+          body: "Package etc directory on date ${{ env.DATE }}"
+          files: |
+            mosdns-rule.tar.gz
+            mosdns-rule.tar.gz.sha256sum
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
