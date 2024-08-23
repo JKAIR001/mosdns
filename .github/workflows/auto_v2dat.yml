@@ -33,10 +33,10 @@ jobs:
       run: |
         set -e
         echo "Downloading geoip.dat..."
-        curl --connect-timeout 5 -m 60 --ipv4 -kfSLo "geoip.dat" "https://github.com/Loyalsoldier/geoip/releases/latest/download/geoip.dat"
+        curl --connect-timeout 5 -m 60 --ipv4 -kfSLo "geoip.dat" "https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geoip.dat"
         
         echo "Downloading geoip.dat.sha256sum..."
-        curl --connect-timeout 5 -m 10 --ipv4 -kfSLo "geoip.dat.sha256sum" "https://github.com/Loyalsoldier/geoip/releases/latest/download/geoip.dat.sha256sum"
+        curl --connect-timeout 5 -m 10 --ipv4 -kfSLo "geoip.dat.sha256sum" "https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geoip.dat.sha256sum"
         
         echo "Verifying checksum..."
         sha256sum --check "geoip-only-cn-private.dat.sha256sum"
@@ -56,7 +56,7 @@ jobs:
     - name: Unpack geosite and geoip
       run: |
         set -e
-        ./v2dat/v2dat unpack geoip -o etc/mosdns/rule -f cn geoip-only-cn-private.dat
+        ./v2dat/v2dat unpack geoip -o etc/mosdns/rule -f cn geoip.dat
         ./v2dat/v2dat unpack geosite -o etc/mosdns/rule -f cn geosite.dat
         ./v2dat/v2dat unpack geosite -o etc/mosdns/rule -f apple geosite.dat
         ./v2dat/v2dat unpack geosite -o etc/mosdns/rule -f 'geolocation-!cn' geosite.dat
