@@ -39,7 +39,7 @@ jobs:
         curl --connect-timeout 5 -m 10 --ipv4 -kfSLo "geoip.dat.sha256sum" "https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geoip.dat.sha256sum"
         
         echo "Verifying checksum..."
-        sha256sum --check "geoip-only-cn-private.dat.sha256sum"
+        sha256sum --check "geoip.dat.sha256sum"
 
     - name: Download geosite.dat and verify checksum
       run: |
