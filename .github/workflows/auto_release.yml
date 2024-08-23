@@ -34,7 +34,7 @@ jobs:
           fi
 
       - name: Archive etc directory
-        run: git archive -o "mosdns-rule.tar.gz" HEAD etc/mosdns/rule
+        run: git archive -o "mosdns-rule.tar.gz" HEAD mosdns/rule
 
       - name: Calculate sha256 of new tarball
         id: sha_new_tarball
