@@ -56,11 +56,12 @@ jobs:
     - name: Unpack geosite and geoip
       run: |
         set -e
-        ./v2dat/v2dat unpack geoip -o etc/mosdns/rule -f cn geoip.dat
-        ./v2dat/v2dat unpack geosite -o etc/mosdns/rule -f cn geosite.dat
-        ./v2dat/v2dat unpack geosite -o etc/mosdns/rule -f apple geosite.dat
-        ./v2dat/v2dat unpack geosite -o etc/mosdns/rule -f 'geolocation-!cn' geosite.dat
-        ./v2dat/v2dat unpack geosite -o etc/mosdns/rule -f category-ads-all geosite.dat
+        ./v2dat/v2dat unpack geoip -o mosdns/rule -f private geoip.dat
+        ./v2dat/v2dat unpack geoip -o mosdns/rule -f cn geoip.dat
+        ./v2dat/v2dat unpack geosite -o mosdns/rule -f cn geosite.dat
+        ./v2dat/v2dat unpack geosite -o mosdns/rule -f gfw geosite.dat
+        ./v2dat/v2dat unpack geosite -o mosdns/rule -f 'geolocation-!cn' geosite.dat
+        ./v2dat/v2dat unpack geosite -o mosdns/rule -f category-ads-all geosite.dat
 
     - name: Set up git
       run: |
@@ -71,8 +72,8 @@ jobs:
     - name: Commit and push
       run: |
         set -e
-        git add etc/mosdns/rule/
-        if ! git diff --staged --quiet etc/mosdns/rule/; then
+        git add mosdns/rule/
+        if ! git diff --staged --quiet mosdns/rule/; then
           git commit -m "Automated geoip/site update"
           git push
         else
