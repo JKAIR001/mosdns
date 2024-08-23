@@ -1,3 +1,4 @@
+# Mosdns:v5
 log:
   level: debug
   # file: "/var/log/mosdns.log"
