@@ -60,7 +60,7 @@ jobs:
         with:
           tag_name: v${{ env.DATE }}
           name: v${{ env.DATE }}
-          body: "Package etc directory on date ${{ env.DATE }}"
+          body: "GeoData package directory on date ${{ env.DATE }}"
           files: |
             mosdns-rule.tar.gz
             mosdns-rule.tar.gz.sha256sum
